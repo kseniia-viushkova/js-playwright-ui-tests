@@ -1,0 +1,16 @@
+{
+  "name": "js-playwright-ui-tests",
+  "version": "1.0.0",
+  "description": "Sample tests in JavaScript using Playwright",
+  "main": "test.js",
+  "scripts": {
+    "test": "playwright test --headed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.4.0"
+  }
+}
