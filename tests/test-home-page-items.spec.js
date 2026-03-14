@@ -20,6 +20,13 @@ test('cart counter and total are zero on main page', async ({ page }) => {
   await mainPage.assertTotalIsZero();
 });
 
+test('shows unique coffee names on the main page', async ({ page }) => {
+  const mainPage = new CoffeeCartMainPage(page);
+
+  await mainPage.open();
+  await mainPage.assertNoDuplicateProductNames();
+});
+
 test('adds one drink and updates cart and total', async ({ page }) => {
   const mainPage = new CoffeeCartMainPage(page);
 

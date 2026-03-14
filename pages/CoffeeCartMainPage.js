@@ -9,6 +9,7 @@ export class CoffeeCartMainPage {
     this.page = page;
     this.cartLink = page.getByRole('link', { name: 'Cart page' });
     this.checkoutButton = page.locator('button.pay');
+    this.coffeeNameAndPrice = page.locator("//*[contains(@class, 'cup')]/ancestor::li/h4");
   }
 
   async open() {
@@ -21,6 +22,16 @@ export class CoffeeCartMainPage {
 
   async assertTotalIsZero() {
     await this.assertTotalValue(0);
+  }
+
+  async assertNoDuplicateProductNames() {
+    const productsNameAndPrice = await this.coffeeNameAndPrice.all()
+    const productNames = await Promise.all(productsNameAndPrice.map(async (element) =>
+      (await element.innerText()).split('\n')[0].trim()));
+
+    const uniqueProductNames = new Set(productNames);
+
+    expect(uniqueProductNames.size).toBe(productNames.length);
   }
 
   /**
