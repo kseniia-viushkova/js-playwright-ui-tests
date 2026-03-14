@@ -1,6 +1,7 @@
 // @ts-check
 import { test, expect } from '@playwright/test';
 import { CoffeeCartMainPage } from '../pages/CoffeeCartMainPage';
+import { mapOfCoffeeItemsAndTheirChineseNames } from '../utils/file-reader';
 
 test('has title', async ({ page }) => {
   await page.goto('/');
@@ -57,4 +58,18 @@ test('adds same drink twice and doubles total', async ({ page }) => {
 
   await mainPage.assertCartCount(2);
   await mainPage.assertTotalValue(20);
+});
+
+test('double-clicking a coffee name changes it to Chinese', async ({ page }) => {
+  const mainPage = new CoffeeCartMainPage(page);
+  const coffeeChineseNames = mapOfCoffeeItemsAndTheirChineseNames();
+
+  await mainPage.open();
+
+  const coffeeHeaders = await mainPage.getAllCoffeeHeaders();
+  
+  for (const coffeeHeader of coffeeHeaders) {
+    await mainPage.assertCoffeeNameInChinese(coffeeHeader,
+      coffeeChineseNames.get(await mainPage.getCoffeeNameFromHeader(coffeeHeader)));
+  }
 });
