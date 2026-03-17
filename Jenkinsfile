@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-        }
-    }
+    agent any
 
     environment {
         CI = 'true'
@@ -17,15 +13,18 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Run Playwright In Docker') {
             steps {
-                sh 'npm ci'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh 'npx playwright test --reporter=line,junit,html'
+                bat '''
+                docker run --rm ^
+                  --ipc=host ^
+                  -e CI=true ^
+                  -e PLAYWRIGHT_JUNIT_OUTPUT_FILE=/work/test-results/results.xml ^
+                  -v "%WORKSPACE%:/work" ^
+                  -w /work ^
+                  mcr.microsoft.com/playwright:v1.58.2-jammy ^
+                  /bin/bash -lc "npm ci && npx playwright test --reporter=line,junit,html"
+                '''
             }
         }
     }
@@ -39,9 +38,6 @@ pipeline {
                 reportName: 'Playwright Report'
             ]
             archiveArtifacts artifacts: 'playwright-report/**,test-results/**', allowEmptyArchive: true
-        }
-        failure {
-            echo 'Tests failed. Check the report above.'
         }
     }
 }
