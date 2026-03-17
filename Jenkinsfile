@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'mcr.microsoft.com/playwright:v1.58.2-jammy'
-            reuseNode true
         }
     }
 
