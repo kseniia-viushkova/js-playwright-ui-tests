@@ -4,7 +4,7 @@
   "description": "Sample tests in JavaScript using Playwright",
   "main": "test.js",
   "scripts": {
-    "test": "playwright test --headed"
+    "test": "playwright test"
   },
   "keywords": [],
   "author": "",
